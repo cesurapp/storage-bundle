@@ -14,12 +14,12 @@
     "require": {
         "php": ">=8.2",
         "ext-fileinfo": "*",
-        "symfony/dependency-injection": "^7.0",
-        "symfony/http-kernel": "^7.0",
+        "symfony/dependency-injection": "*",
+        "symfony/http-kernel": "*",
+        "symfony/framework-bundle": "*",
         "async-aws/s3": "^2.0"
     },
     "require-dev": {
-        "symfony/framework-bundle": "^7.0",
         "php-cs-fixer/shim": "^3.40",
         "symfony/test-pack": "^1.1",
         "phpstan/phpstan": "^1.10"
