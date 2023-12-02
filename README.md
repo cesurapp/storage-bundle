@@ -1,5 +1,8 @@
 # Storage Bundle
 
+[![App Tester](https://github.com/cesurapp/storage-bundle/actions/workflows/testing.yaml/badge.svg)](https://github.com/cesurapp/storage-bundle/actions/workflows/testing.yaml)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?logo=Unlicense)](LICENSE.md)
+
 It is used for file storage. There is no database connection.
 Async-aws/s3 package is used for S3 connection.
 Tests are available for each driver, any test without access codes is skipped.
