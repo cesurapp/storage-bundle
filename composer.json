@@ -17,10 +17,10 @@
         "symfony/http-kernel": "^7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^7.0",
         "symfony/framework-bundle": "^7.0",
-        "friendsofphp/php-cs-fixer": "^3.40"
+        "php-cs-fixer/shim": "^3.40",
+        "symfony/test-pack": "^1.1",
+        "phpstan/phpstan": "^1.10"
     },
     "autoload": {
         "psr-4": {
@@ -36,6 +36,12 @@
         "test": "@php ./vendor/bin/phpunit --verbose --testdox --colors",
         "test:stop": "@php ./vendor/bin/phpunit --verbose --testdox --colors --stop-on-failure",
         "qa:fix": "vendor/bin/php-cs-fixer fix --ansi --allow-risky=yes",
-        "qa:lint": "vendor/bin/php-cs-fixer fix --dry-run --diff --ansi --allow-risky=yes"
+        "qa:lint": "vendor/bin/php-cs-fixer fix --dry-run --diff --ansi --allow-risky=yes",
+        "qa:phpstan": "vendor/bin/phpstan analyse --no-progress --ansi --memory-limit 512m",
+        "fix": [
+            "@qa:fix",
+            "@qa:phpstan",
+            "@test"
+        ]
     }
 }
