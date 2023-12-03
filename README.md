@@ -14,6 +14,12 @@ You can use multiple drives at the same time. Use MediaBunle to keep track of fi
 * CloudFlare
 * Local
 
+### Install
+Required Symfony 7
+```
+composer req cesurapp/storage-bundle
+```
+
 ### Configuration
 
 ```yaml
