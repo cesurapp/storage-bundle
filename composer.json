@@ -45,5 +45,10 @@
             "@qa:phpstan",
             "@test"
         ]
+    },
+    "extra": {
+        "symfony": {
+            "require": "7.0.*"
+        }
     }
 }
