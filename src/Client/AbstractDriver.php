@@ -48,7 +48,7 @@ abstract class AbstractDriver implements DriverInterface
         string $content,
         string $storagePath,
         string $contentType = 'text/plain',
-        array $metadata = []
+        array $metadata = [],
     ): bool {
         if (!empty($metadata['ContentType'])) {
             $metadata['ContentType'] = $contentType;

@@ -7,14 +7,9 @@ use Cesurapp\StorageBundle\Client\SimpleS3Client;
 
 class Cloudflare extends AbstractDriver
 {
-    public function __construct(
-        protected string $accessKey,
-        protected string $secretKey,
-        protected string $bucket,
-        protected string $root,
-        protected string $endPoint = '',
-        protected string $region = '',
-    ) {
+    public function __construct(protected string $accessKey, protected string $secretKey, protected string $bucket, protected string $root, protected string $endPoint = '', protected string $region = '')
+    {
+        // @phpstan-ignore-next-line
         $this->client = new SimpleS3Client([
             'accessKeyId' => $accessKey,
             'accessKeySecret' => $secretKey,

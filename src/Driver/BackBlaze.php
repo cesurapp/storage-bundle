@@ -27,6 +27,7 @@ class BackBlaze extends AbstractDriver
         protected string $endPoint = '',
         protected string $region = 'auto',
     ) {
+        // @phpstan-ignore-next-line
         $this->client = new SimpleS3Client([
             'accessKeyId' => $this->accessKey,
             'accessKeySecret' => $this->secretKey,

@@ -43,7 +43,7 @@ class StorageBundle extends AbstractBundle
             $class = match ($value['driver']) {
                 'cloudflare' => Cloudflare::class,
                 'backblaze' => BackBlaze::class,
-                default => Local::class
+                default => Local::class,
             };
 
             $ref = new \ReflectionClass($class);
