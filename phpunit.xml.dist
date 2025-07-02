@@ -1,40 +1,35 @@
 <?xml version="1.0"?>
 <phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    bootstrap="vendor/autoload.php"
-    colors="true"
-    beStrictAboutOutputDuringTests="true"
-    beStrictAboutChangesToGlobalState="true"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
-    cacheResultFile="var/.phpunit.result.cache"
->
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        bootstrap="vendor/autoload.php"
+        colors="true"
+        beStrictAboutOutputDuringTests="true"
+        beStrictAboutChangesToGlobalState="true"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.2/phpunit.xsd">
     <php>
         <server name="KERNEL_CLASS" value="Cesurapp\StorageBundle\Tests\Kernel"/>
-
         <!--BackBlaze-->
         <!--<server name="BACKBLAZE_ACCESS_KEY" value="KEY"/>
-        <server name="BACKBLAZE_SECRET" value="KEY"/>
-        <server name="BACKBLAZE_BUCKET" value="KEY"/>-->
-
+            <server name="BACKBLAZE_SECRET" value="KEY"/>
+            <server name="BACKBLAZE_BUCKET" value="KEY"/>-->
         <!--CloudFlare R2-->
         <!--<server name="CLOUDFLARE_R2_ACCESS_KEY" value="27bb250534f19f59be7ad468f3a65ac5"/>
-        <server name="CLOUDFLARE_R2_SECRET" value="1bad239edfab8c98cf5cbed6be77616c5fb19e61523cc26305f392d7d46d9c2d"/>
-        <server name="CLOUDFLARE_R2_ENDPOINT" value="https://11d0547262baad2e6bdeb340e88f83be.r2.cloudflarestorage.com"/>
-        <server name="CLOUDFLARE_R2_BUCKET" value="unit-test"/>-->
+            <server name="CLOUDFLARE_R2_SECRET" value="1bad239edfab8c98cf5cbed6be77616c5fb19e61523cc26305f392d7d46d9c2d"/>
+            <server name="CLOUDFLARE_R2_ENDPOINT" value="https://11d0547262baad2e6bdeb340e88f83be.r2.cloudflarestorage.com"/>
+            <server name="CLOUDFLARE_R2_BUCKET" value="unit-test"/>-->
     </php>
-
-    <coverage includeUncoveredFiles="false">
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-    </coverage>
 
     <testsuites>
         <testsuite name="Tests">
             <directory>./tests</directory>
-
             <exclude>./tests/CloudflareTest.php</exclude>
             <exclude>./tests/BackBlazeTest.php</exclude>
         </testsuite>
     </testsuites>
+
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </source>
 </phpunit>

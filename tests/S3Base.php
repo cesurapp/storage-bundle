@@ -17,6 +17,13 @@ abstract class S3Base extends WebTestCase
         $this->init();
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        restore_exception_handler();
+    }
+
     public function testUpload(): void
     {
         $this->assertTrue($this->client->upload(__DIR__.'/resources/file-1.jpg', 'testing/file-1.jpg'));
