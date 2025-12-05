@@ -15,7 +15,7 @@ You can use multiple drives at the same time. Use MediaBunle to keep track of fi
 * Local
 
 ### Install
-Required Symfony 7
+Required Symfony 8
 ```
 composer req cesurapp/storage-bundle
 ```
