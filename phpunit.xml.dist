@@ -1,11 +1,16 @@
 <?xml version="1.0"?>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
         bootstrap="vendor/autoload.php"
         colors="true"
         beStrictAboutOutputDuringTests="true"
         beStrictAboutChangesToGlobalState="true"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.2/phpunit.xsd">
+        failOnDeprecation="true"
+        failOnNotice="true"
+        failOnWarning="true"
+        cacheDirectory="var"
+>
     <php>
         <server name="KERNEL_CLASS" value="Cesurapp\StorageBundle\Tests\Kernel"/>
         <!--BackBlaze-->
@@ -33,3 +38,4 @@
         </include>
     </source>
 </phpunit>
+
