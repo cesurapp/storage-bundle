@@ -26,6 +26,7 @@ class BackBlaze extends AbstractDriver
         protected string $root,
         protected string $endPoint = '',
         protected string $region = 'auto',
+        protected string $domain = '',
     ) {
         // @phpstan-ignore-next-line
         $this->client = new SimpleS3Client([
@@ -36,6 +37,6 @@ class BackBlaze extends AbstractDriver
             'pathStyleEndpoint' => true,
         ]);
 
-        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region);
+        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain);
     }
 }

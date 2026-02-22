@@ -13,6 +13,7 @@ abstract class AbstractDriver implements DriverInterface
         protected string $root,
         protected string $endPoint = '',
         protected string $region = '',
+        protected string $domain = '',
     ) {
     }
 
@@ -23,7 +24,7 @@ abstract class AbstractDriver implements DriverInterface
 
     protected function getPath(string $filename): string
     {
-        return $this->getRoot().DIRECTORY_SEPARATOR.ltrim($filename, '\\/');
+        return ltrim($this->getRoot().DIRECTORY_SEPARATOR.ltrim($filename, '\\/'), '/');
     }
 
     public function getClient(): SimpleS3Client
@@ -50,7 +51,7 @@ abstract class AbstractDriver implements DriverInterface
         string $contentType = 'text/plain',
         array $metadata = [],
     ): bool {
-        if (!empty($metadata['ContentType'])) {
+        if (empty($metadata['ContentType'])) {
             $metadata['ContentType'] = $contentType;
         }
 
@@ -91,6 +92,11 @@ abstract class AbstractDriver implements DriverInterface
     public function getUrl(string $storagePath): string
     {
         return $this->getClient()->getUrl($this->bucket, $this->getPath($storagePath));
+    }
+
+    public function getPresignedUrl(string $storagePath, ?\DateTimeImmutable $expires = null): string
+    {
+        return $this->getClient()->getPresignedUrl($this->bucket, $this->getPath($storagePath), $expires);
     }
 
     public function delete(string $storagePath): bool

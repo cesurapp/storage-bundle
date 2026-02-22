@@ -23,6 +23,8 @@ interface DriverInterface
 
     public function getUrl(string $storagePath): string;
 
+    public function getPresignedUrl(string $storagePath, ?\DateTimeImmutable $expires = null): string;
+
     public function delete(string $storagePath): bool;
 
     public function getSize(string $storagePath): int;

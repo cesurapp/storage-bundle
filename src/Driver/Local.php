@@ -114,11 +114,55 @@ class Local implements DriverInterface
     }
 
     /**
-     * Real Path.
+     * URL.
      */
     public function getUrl(string $storagePath): string
     {
         return $this->getPath($storagePath);
+    }
+
+    /**
+     * Signed URL.
+     */
+    public function getPresignedUrl(string $storagePath, ?\DateTimeImmutable $expires = null): string
+    {
+        $timestamp = $expires?->getTimestamp() ?? (time() + 3600);
+
+        return http_build_query([
+            't' => $timestamp,
+            's' => $this->generateSignature($this->getPath($storagePath), $timestamp, $_ENV['APP_SECRET'] ?? 'default_secret'),
+        ]);
+    }
+
+    public function validateSignedUrl(string $url, string $storagePath): bool
+    {
+        $query = parse_url($url, PHP_URL_QUERY);
+        if (!$query) {
+            return false;
+        }
+
+        parse_str($query, $params);
+
+        $expires = (int) ($params['t'] ?? 0);
+        $signature = $params['s'] ?? '';
+
+        if (!$expires || !$signature) {
+            return false;
+        }
+
+        if (time() >= $expires) {
+            return false;
+        }
+
+        return hash_equals(
+            $this->generateSignature($this->getPath($storagePath), $expires, $_ENV['APP_SECRET'] ?? 'default_secret'),
+            $signature
+        );
+    }
+
+    private function generateSignature(string $path, int $timestamp, string $secret): string
+    {
+        return hash_hmac('sha256', $path.':'.$timestamp, $secret);
     }
 
     /**
