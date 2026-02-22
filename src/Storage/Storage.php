@@ -14,9 +14,11 @@ use Cesurapp\StorageBundle\Client\SimpleS3Client;
  * @method resource       downloadResource(string $storagePath)
  * @method iterable       downloadChunk(string $storagePath)
  * @method string         getUrl(string $storagePath)
+ * @method string         getPresignedUrl(string $storagePath, ?\DateTimeImmutable $expires)
  * @method bool           delete(string $storagePath)
  * @method int            getSize(string $storagePath)
  * @method string         getMimeType(string $storagePath)
+ * @method string|null    getDomain()
  */
 readonly class Storage
 {

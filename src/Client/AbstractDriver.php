@@ -128,4 +128,9 @@ abstract class AbstractDriver implements DriverInterface
 
         return $head->getContentType();
     }
+
+    public function getDomain(): ?string
+    {
+        return $this->domain;
+    }
 }

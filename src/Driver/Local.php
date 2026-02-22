@@ -8,7 +8,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 class Local implements DriverInterface
 {
-    public function __construct(private string $root)
+    public function __construct(private string $root, private string $domain = '')
     {
         $this->root = rtrim($root, '\\/');
     }
@@ -318,5 +318,10 @@ class Local implements DriverInterface
         }
 
         return false;
+    }
+
+    public function getDomain(): string
+    {
+        return $this->domain;
     }
 }

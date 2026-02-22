@@ -30,4 +30,6 @@ interface DriverInterface
     public function getSize(string $storagePath): int;
 
     public function getMimeType(string $storagePath): string;
+
+    public function getDomain(): ?string;
 }
