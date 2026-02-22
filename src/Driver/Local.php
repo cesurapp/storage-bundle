@@ -128,7 +128,7 @@ class Local implements DriverInterface
     {
         $timestamp = $expires?->getTimestamp() ?? (time() + 3600);
 
-        return http_build_query([
+        return $this->getPath($storagePath).'?'.http_build_query([
             't' => $timestamp,
             's' => $this->generateSignature($this->getPath($storagePath), $timestamp, $_ENV['APP_SECRET'] ?? 'default_secret'),
         ]);
