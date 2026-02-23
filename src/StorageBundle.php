@@ -59,7 +59,7 @@ class StorageBundle extends AbstractBundle
             }
 
             // Inject HTTP Client for Cloudflare and BackBlaze drivers
-            if ($class === Cloudflare::class || $class === BackBlaze::class) {
+            if (Cloudflare::class === $class || BackBlaze::class === $class) {
                 $definition->setArgument('$httpClient', new Reference('http_client'));
             }
 
