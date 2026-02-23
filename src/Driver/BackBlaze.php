@@ -4,6 +4,7 @@ namespace Cesurapp\StorageBundle\Driver;
 
 use Cesurapp\StorageBundle\Client\AbstractDriver;
 use Cesurapp\StorageBundle\Client\SimpleS3Client;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class BackBlaze extends AbstractDriver
 {
@@ -27,6 +28,7 @@ class BackBlaze extends AbstractDriver
         protected string $endPoint = '',
         protected string $region = 'auto',
         protected string $domain = '',
+        ?HttpClientInterface $httpClient = null,
     ) {
         // @phpstan-ignore-next-line
         $this->client = new SimpleS3Client([
@@ -35,6 +37,7 @@ class BackBlaze extends AbstractDriver
             'region' => $this->region,
             'endpoint' => "https://s3.$this->region.backblazeb2.com",
             'pathStyleEndpoint' => true,
+            'httpClient' => $httpClient,
         ]);
 
         parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain);

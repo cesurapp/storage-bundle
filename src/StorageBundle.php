@@ -10,6 +10,7 @@ use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class StorageBundle extends AbstractBundle
@@ -56,6 +57,12 @@ class StorageBundle extends AbstractBundle
             foreach ($initData as $key => $val) {
                 $definition->setArgument("$$key", $val);
             }
+
+            // Inject HTTP Client for Cloudflare and BackBlaze drivers
+            if ($class === Cloudflare::class || $class === BackBlaze::class) {
+                $definition->setArgument('$httpClient', new Reference('http_client'));
+            }
+
             $deviceDefinitions[$device] = $builder->setDefinition($device, $definition);
         }
 

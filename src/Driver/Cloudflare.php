@@ -4,6 +4,7 @@ namespace Cesurapp\StorageBundle\Driver;
 
 use Cesurapp\StorageBundle\Client\AbstractDriver;
 use Cesurapp\StorageBundle\Client\SimpleS3Client;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Cloudflare extends AbstractDriver
 {
@@ -15,6 +16,7 @@ class Cloudflare extends AbstractDriver
         protected string $endPoint = '',
         protected string $region = '',
         protected string $domain = '',
+        ?HttpClientInterface $httpClient = null,
     ) {
         // @phpstan-ignore-next-line
         $this->client = new SimpleS3Client([
@@ -23,7 +25,7 @@ class Cloudflare extends AbstractDriver
             'region' => $this->region,
             'endpoint' => $this->endPoint,
             'pathStyleEndpoint' => true,
-        ]);
+        ], null, $httpClient);
 
         parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain);
     }
