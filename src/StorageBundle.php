@@ -29,6 +29,7 @@ class StorageBundle extends AbstractBundle
                             ->scalarNode('accessKey')->defaultValue('')->end()
                             ->scalarNode('secretKey')->defaultValue('')->end()
                             ->scalarNode('bucket')->defaultValue('')->end()
+                            ->scalarNode('bucketPrivate')->defaultValue('')->end()
                             ->scalarNode('region')->defaultValue('')->end()
                             ->scalarNode('endPoint')->defaultValue('')->end()
                             ->scalarNode('domain')->defaultValue('')->end()

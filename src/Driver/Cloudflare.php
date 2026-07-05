@@ -16,6 +16,7 @@ class Cloudflare extends AbstractDriver
         protected string $endPoint = '',
         protected string $region = '',
         protected string $domain = '',
+        protected string $bucketPrivate = '',
         ?HttpClientInterface $httpClient = null,
     ) {
         // @phpstan-ignore-next-line
@@ -27,12 +28,12 @@ class Cloudflare extends AbstractDriver
             'pathStyleEndpoint' => true,
         ], null, $httpClient);
 
-        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain);
+        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain, $this->bucketPrivate);
     }
 
     public function getUrl(string $storagePath): string
     {
-        if (!$this->domain) {
+        if (!$this->domain || $this->isPrivate) {
             return parent::getUrl($storagePath);
         }
 
@@ -41,7 +42,7 @@ class Cloudflare extends AbstractDriver
 
     public function getPresignedUrl(string $storagePath, ?\DateTimeImmutable $expires = null): string
     {
-        if (!$this->domain) {
+        if (!$this->domain || $this->isPrivate) {
             return parent::getPresignedUrl($storagePath, $expires);
         }
 

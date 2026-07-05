@@ -34,6 +34,11 @@ readonly class Storage
         return $this->devices[$deviceKey];
     }
 
+    public function private(): DriverInterface
+    {
+        return $this->devices[$this->default]->private();
+    }
+
     public function getStorageKey(): string
     {
         return $this->default;

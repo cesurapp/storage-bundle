@@ -28,6 +28,7 @@ class BackBlaze extends AbstractDriver
         protected string $endPoint = '',
         protected string $region = 'auto',
         protected string $domain = '',
+        protected string $bucketPrivate = '',
         ?HttpClientInterface $httpClient = null,
     ) {
         // @phpstan-ignore-next-line
@@ -40,6 +41,6 @@ class BackBlaze extends AbstractDriver
             'httpClient' => $httpClient,
         ]);
 
-        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain);
+        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain, $this->bucketPrivate);
     }
 }

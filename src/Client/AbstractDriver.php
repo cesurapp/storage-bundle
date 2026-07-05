@@ -5,6 +5,8 @@ namespace Cesurapp\StorageBundle\Client;
 abstract class AbstractDriver implements DriverInterface
 {
     protected SimpleS3Client $client;
+    protected bool $isPrivate = false;
+    protected ?self $privateView = null;
 
     public function __construct(
         protected string $accessKey,
@@ -14,7 +16,30 @@ abstract class AbstractDriver implements DriverInterface
         protected string $endPoint = '',
         protected string $region = '',
         protected string $domain = '',
+        protected string $bucketPrivate = '',
     ) {
+    }
+
+    public function private(): self
+    {
+        if ($this->isPrivate) {
+            return $this;
+        }
+
+        if (null !== $this->privateView) {
+            return $this->privateView;
+        }
+
+        if ('' === $this->bucketPrivate) {
+            throw new \LogicException('bucketPrivate is not configured for this device.');
+        }
+
+        $clone = clone $this;
+        $clone->bucket = $this->bucketPrivate;
+        $clone->isPrivate = true;
+        $clone->privateView = null;
+
+        return $this->privateView = $clone;
     }
 
     protected function getRoot(): string

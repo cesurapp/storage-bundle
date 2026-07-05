@@ -324,4 +324,9 @@ class Local implements DriverInterface
     {
         return $this->domain;
     }
+
+    public function private(): self
+    {
+        return $this;
+    }
 }
