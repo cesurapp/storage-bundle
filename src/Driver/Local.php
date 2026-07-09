@@ -134,6 +134,14 @@ class Local implements DriverInterface
         ]);
     }
 
+    /**
+     * The local driver has no upload endpoint to hand out — files are written through the driver.
+     */
+    public function getPresignedPutUrl(string $storagePath, ?\DateTimeImmutable $expires = null): string
+    {
+        throw new \LogicException('Presigned PUT upload is not supported by the local driver.');
+    }
+
     public function validateSignedUrl(string $url, string $storagePath): bool
     {
         $query = parse_url($url, PHP_URL_QUERY);

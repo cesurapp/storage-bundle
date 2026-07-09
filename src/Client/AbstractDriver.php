@@ -124,6 +124,15 @@ abstract class AbstractDriver implements DriverInterface
         return $this->getClient()->getPresignedUrl($this->bucket, $this->getPath($storagePath), $expires);
     }
 
+    /**
+     * Presigned URL letting a third party upload straight to this bucket with a single HTTP PUT.
+     * Always signed against the S3 endpoint — a CDN domain only fronts reads.
+     */
+    public function getPresignedPutUrl(string $storagePath, ?\DateTimeImmutable $expires = null): string
+    {
+        return $this->getClient()->getPresignedPutUrl($this->bucket, $this->getPath($storagePath), $expires);
+    }
+
     public function delete(string $storagePath): bool
     {
         $result = $this->getClient()->deleteObject([

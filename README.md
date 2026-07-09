@@ -149,6 +149,25 @@ $presignedUrl = $client->getPresignedUrl(
 );
 ```
 
+### Pre-signed Upload URLs (Cloud Only)
+
+Hand a third party a URL it can `PUT` a single object to, without ever giving it storage
+credentials. Always signed against the S3 endpoint — a configured CDN `domain` fronts reads only.
+
+```php
+$uploadUrl = $storage->device('main')->private()->getPresignedPutUrl(
+    'recordings/2026/07/call.webm',
+    new \DateTimeImmutable('+1 hour')
+);
+
+// The uploader then does: PUT $uploadUrl, Content-Type: video/webm, body: <bytes>
+```
+
+Neither the body (signed as `UNSIGNED-PAYLOAD`) nor `Content-Type` is covered by the signature, so
+the uploader chooses both. It should still send the intended `Content-Type` — S3/R2 stores it as the
+object's metadata and serves it back on download. The URL is bound to one bucket, one key and one
+verb, and expires. The local driver throws a `LogicException`: it has no upload endpoint to hand out.
+
 ### Local Driver Specific Methods
 
 ```php

@@ -15,6 +15,7 @@ use Cesurapp\StorageBundle\Client\SimpleS3Client;
  * @method iterable       downloadChunk(string $storagePath)
  * @method string         getUrl(string $storagePath)
  * @method string         getPresignedUrl(string $storagePath, ?\DateTimeImmutable $expires)
+ * @method string         getPresignedPutUrl(string $storagePath, ?\DateTimeImmutable $expires)
  * @method bool           delete(string $storagePath)
  * @method int            getSize(string $storagePath)
  * @method string         getMimeType(string $storagePath)
@@ -32,6 +33,11 @@ readonly class Storage
     public function device(string $deviceKey): DriverInterface
     {
         return $this->devices[$deviceKey];
+    }
+
+    public function hasDevice(string $deviceKey): bool
+    {
+        return isset($this->devices[$deviceKey]);
     }
 
     public function private(): DriverInterface

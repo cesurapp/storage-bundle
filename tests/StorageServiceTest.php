@@ -18,4 +18,10 @@ class StorageServiceTest extends S3Base
         $this->assertInstanceOf(Local::class, $this->client->device('main'));
         $this->assertSame('main', $this->client->getStorageKey());
     }
+
+    public function testHasDevice(): void
+    {
+        $this->assertTrue($this->client->hasDevice('main'));
+        $this->assertFalse($this->client->hasDevice('missing'));
+    }
 }

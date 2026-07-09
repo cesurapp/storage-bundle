@@ -63,6 +63,12 @@ class LocalTest extends WebTestCase
         $this->object->delete('text-for-move-new.txt');
     }
 
+    public function testPresignedPutUrlIsNotSupported(): void
+    {
+        $this->expectException(\LogicException::class);
+        $this->object->getPresignedPutUrl('text.txt');
+    }
+
     public function testDelete(): void
     {
         $this->assertTrue($this->object->write('Hello World', 'text-for-delete.txt'));

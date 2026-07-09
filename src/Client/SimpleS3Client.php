@@ -7,6 +7,7 @@ use AsyncAws\Core\Stream\ResultStream;
 use AsyncAws\Core\Stream\StreamFactory;
 use AsyncAws\S3\Enum\ObjectCannedACL;
 use AsyncAws\S3\Input\GetObjectRequest;
+use AsyncAws\S3\Input\PutObjectRequest;
 use AsyncAws\S3\Result\CompleteMultipartUploadOutput;
 use AsyncAws\S3\Result\PutObjectOutput;
 use AsyncAws\S3\S3Client;
@@ -25,6 +26,23 @@ class SimpleS3Client extends S3Client
     public function getPresignedUrl(string $bucket, string $key, ?\DateTimeImmutable $expires = null): string
     {
         $request = new GetObjectRequest([
+            'Bucket' => $bucket,
+            'Key' => $key,
+        ]);
+
+        return $this->presign($request, $expires);
+    }
+
+    /**
+     * Presigned URL for a direct HTTP PUT upload.
+     *
+     * Neither the body (signed as UNSIGNED-PAYLOAD) nor Content-Type (blacklisted from the
+     * canonical headers) is covered by the signature, so the uploader sends both freely. Sending
+     * the intended Content-Type is still expected: S3/R2 stores it as the object's metadata.
+     */
+    public function getPresignedPutUrl(string $bucket, string $key, ?\DateTimeImmutable $expires = null): string
+    {
+        $request = new PutObjectRequest([
             'Bucket' => $bucket,
             'Key' => $key,
         ]);
