@@ -59,15 +59,22 @@ abstract class AbstractDriver implements DriverInterface
 
     public function upload(string $sourcePath, string $storagePath, array $metadata = []): bool
     {
-        $fp = \fopen($sourcePath, 'rb');
-
-        if (empty($metadata['ContentType'])) {
-            $metadata['ContentType'] = mime_content_type($fp);
+        $fp = @\fopen($sourcePath, 'rb');
+        if (false === $fp) {
+            throw new \RuntimeException(sprintf('Can\'t open file "%s"', $sourcePath));
         }
 
-        $result = $this->getClient()->upload($this->bucket, $this->getPath($storagePath), $fp, $metadata);
+        try {
+            if (empty($metadata['ContentType'])) {
+                $metadata['ContentType'] = mime_content_type($fp);
+            }
 
-        return 200 === $result->info()['response']->getStatusCode();
+            $result = $this->getClient()->upload($this->bucket, $this->getPath($storagePath), $fp, $metadata);
+
+            return 200 === $result->info()['response']->getStatusCode();
+        } finally {
+            \fclose($fp);
+        }
     }
 
     public function write(

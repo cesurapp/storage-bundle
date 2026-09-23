@@ -24,7 +24,7 @@ class StorageBundle extends AbstractBundle
                         ->useAttributeAsKey('name')
                         ->arrayPrototype()
                         ->children()
-                            ->enumNode('driver')->isRequired()->values(['local', 'cloudflare'])->end()
+                            ->enumNode('driver')->isRequired()->values(['local', 'cloudflare', 'backblaze'])->end()
                             ->scalarNode('root')->isRequired()->end()
                             ->scalarNode('accessKey')->defaultValue('')->end()
                             ->scalarNode('secretKey')->defaultValue('')->end()
@@ -64,7 +64,8 @@ class StorageBundle extends AbstractBundle
                 $definition->setArgument('$httpClient', new Reference('http_client'));
             }
 
-            $deviceDefinitions[$device] = $builder->setDefinition($device, $definition);
+            // Prefixed so a device name like "cache" or "http_client" can't replace a core service
+            $deviceDefinitions[$device] = $builder->setDefinition("storage.device.$device", $definition);
         }
 
         // Register Storage

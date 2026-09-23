@@ -35,6 +35,6 @@ class CloudflareTest extends S3Base
         $this->assertSame(200, $response->getStatusCode());
         $this->assertEquals('Hello World', $this->client->download('testing/presigned.txt'));
         $this->assertEquals('text/plain', $this->client->getMimeType('testing/presigned.txt'));
-        $this->assertEquals(204, $this->client->delete('testing/presigned.txt'));
+        $this->assertTrue($this->client->delete('testing/presigned.txt'));
     }
 }

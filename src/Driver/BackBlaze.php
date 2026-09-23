@@ -26,20 +26,22 @@ class BackBlaze extends AbstractDriver
         protected string $bucket,
         protected string $root,
         protected string $endPoint = '',
-        protected string $region = 'auto',
+        protected string $region = '',
         protected string $domain = '',
         protected string $bucketPrivate = '',
         ?HttpClientInterface $httpClient = null,
     ) {
-        // @phpstan-ignore-next-line
+        if ('' === $this->region) {
+            throw new \InvalidArgumentException('BackBlaze requires a region, e.g. BackBlaze::US_WEST_004.');
+        }
+
         $this->client = new SimpleS3Client([
             'accessKeyId' => $this->accessKey,
             'accessKeySecret' => $this->secretKey,
             'region' => $this->region,
-            'endpoint' => "https://s3.$this->region.backblazeb2.com",
-            'pathStyleEndpoint' => true,
-            'httpClient' => $httpClient,
-        ]);
+            'endpoint' => $this->endPoint ?: "https://s3.$this->region.backblazeb2.com",
+            'pathStyleEndpoint' => 'true',
+        ], null, $httpClient);
 
         parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain, $this->bucketPrivate);
     }
