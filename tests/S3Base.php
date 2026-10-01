@@ -58,6 +58,19 @@ abstract class S3Base extends WebTestCase
         $this->assertTrue($this->client->delete('text-delete.txt'));
     }
 
+    public function testDeleteMany(): void
+    {
+        $this->assertTrue($this->client->write('Hello World', 'delete-many/a.txt'));
+        $this->assertTrue($this->client->write('Hello World', 'delete-many/b.txt'));
+
+        // Two spellings of one file, a missing file and two paths naming no file
+        $failed = $this->client->deleteMany(['delete-many/a.txt', '/delete-many/a.txt', 'delete-many/b.txt', 'delete-many/missing.txt', '', '/']);
+
+        $this->assertSame(['', '/'], $failed);
+        $this->assertFalse($this->client->exists('delete-many/a.txt'));
+        $this->assertFalse($this->client->exists('delete-many/b.txt'));
+    }
+
     public function testFileSize(): void
     {
         $this->assertTrue($this->client->upload(__DIR__.'/resources/file-1.jpg', 'testing/file-16.jpg'));

@@ -150,6 +150,44 @@ abstract class AbstractDriver implements DriverInterface
         return 204 === $result->info()['response']->getStatusCode();
     }
 
+    public function deleteMany(array $storagePaths): array
+    {
+        // Paths spelled differently can name the same key, so a key keeps every path given for it
+        $failed = $keys = [];
+        foreach ($storagePaths as $storagePath) {
+            if ('' === ltrim($storagePath, '\\/')) {
+                $failed[$storagePath] = true;
+            } else {
+                $keys[$this->getPath($storagePath)][] = $storagePath;
+            }
+        }
+
+        foreach (array_chunk(array_keys($keys), 1000) as $chunk) {
+            $result = $this->getClient()->deleteObjects([
+                'Bucket' => $this->bucket,
+                'Delete' => [
+                    'Objects' => array_map(static fn (int|string $key) => ['Key' => (string) $key], $chunk),
+                    'Quiet' => true,
+                ],
+            ]);
+            $result->resolve();
+
+            // A timeout or refused connection can come back as a negative status rather than an exception
+            if (200 !== $status = $result->info()['response']->getStatusCode()) {
+                throw new \RuntimeException(sprintf('Deleting objects failed with HTTP status %d.', $status));
+            }
+
+            foreach ($result->getErrors() as $error) {
+                $paths = $keys[(string) $error->getKey()] ?? throw new \RuntimeException(sprintf('Deleting objects failed for "%s", which was not requested.', $error->getKey()));
+                foreach ($paths as $storagePath) {
+                    $failed[$storagePath] = true;
+                }
+            }
+        }
+
+        return array_values(array_unique(array_filter($storagePaths, static fn (string $storagePath) => isset($failed[$storagePath]))));
+    }
+
     public function getSize(string $storagePath): int
     {
         $head = $this->getClient()->headObject([

@@ -183,6 +183,25 @@ class Local implements DriverInterface
         return $this->deleteRecursive($this->getPath($storagePath), true);
     }
 
+    /**
+     * Unlike delete(), never removes a directory.
+     */
+    public function deleteMany(array $storagePaths): array
+    {
+        $failed = array_filter($storagePaths, function (string $storagePath): bool {
+            $path = $this->getPath($storagePath);
+
+            if ('' === ltrim($storagePath, '\\/') || is_dir($path)) {
+                return true;
+            }
+
+            // Another process may have removed the file in between
+            return is_file($path) && !@unlink($path) && is_file($path);
+        });
+
+        return array_values(array_unique($failed));
+    }
+
     private function deleteRecursive(string $path, bool $recursive = false): bool
     {
         if ($recursive && is_dir($path)) {

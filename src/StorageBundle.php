@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class StorageBundle extends AbstractBundle
 {
@@ -33,6 +34,7 @@ class StorageBundle extends AbstractBundle
                             ->scalarNode('region')->defaultValue('')->end()
                             ->scalarNode('endPoint')->defaultValue('')->end()
                             ->scalarNode('domain')->defaultValue('')->end()
+                            ->floatNode('timeout')->defaultNull()->info('Seconds an HTTP request to the cloud storage may take, the HTTP client\'s "timeout" option')->end()
                         ->end()
                     ->end()
                 ->end()
@@ -61,7 +63,13 @@ class StorageBundle extends AbstractBundle
 
             // Inject HTTP Client for Cloudflare and BackBlaze drivers
             if (Cloudflare::class === $class || BackBlaze::class === $class) {
-                $definition->setArgument('$httpClient', new Reference('http_client'));
+                $httpClient = new Reference('http_client');
+                if (null !== $value['timeout']) {
+                    $httpClient = (new Definition(HttpClientInterface::class, [['timeout' => $value['timeout']]]))
+                        ->setFactory([$httpClient, 'withOptions']);
+                }
+
+                $definition->setArgument('$httpClient', $httpClient);
             }
 
             // Prefixed so a device name like "cache" or "http_client" can't replace a core service

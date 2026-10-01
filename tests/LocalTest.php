@@ -77,4 +77,15 @@ class LocalTest extends WebTestCase
         $this->assertFileDoesNotExist($this->object->getUrl('text-for-delete.txt'));
         $this->assertFalse(is_readable($this->object->getUrl('text-for-delete.txt')));
     }
+
+    public function testDeleteManyKeepsDirectories(): void
+    {
+        $this->assertTrue($this->object->write('Hello World', 'delete-many-dir/text.txt'));
+
+        $this->assertSame(['delete-many-dir', 'delete-many-dir/'], $this->object->deleteMany(['delete-many-dir', 'delete-many-dir/']));
+        $this->assertTrue($this->object->exists('delete-many-dir/text.txt'));
+
+        $this->assertSame([], $this->object->deleteMany(['delete-many-dir/text.txt']));
+        $this->assertFalse($this->object->exists('delete-many-dir/text.txt'));
+    }
 }

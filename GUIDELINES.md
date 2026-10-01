@@ -32,6 +32,7 @@ storage:
       bucket: "bucket_name"
       region: "auto"
       endPoint: "https://endpoint.r2.cloudflarestorage.com"
+      timeout: 30  # Optional, seconds a request may take
 ```
 
 ### Switching Providers
@@ -198,12 +199,13 @@ if ($storage->exists('uploads/temp.jpg')) {
     $storage->delete('uploads/temp.jpg');
 }
 
-// Batch delete
-$files = ['file1.jpg', 'file2.jpg', 'file3.jpg'];
-foreach ($files as $file) {
-    $storage->delete("uploads/$file");
-}
+// Batch delete, returns the paths that could not be deleted
+$failed = $storage->deleteMany(['uploads/file1.jpg', 'uploads/file2.jpg', 'uploads/file3.jpg']);
 ```
+
+`deleteMany()` deletes files only, never a directory, and a missing file counts as deleted. Cloud
+drivers send 1000 paths per request and throw when the storage can't be reached; calling again with
+the same paths is safe.
 
 ---
 

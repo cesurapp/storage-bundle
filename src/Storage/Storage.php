@@ -17,6 +17,7 @@ use Cesurapp\StorageBundle\Client\SimpleS3Client;
  * @method string         getPresignedUrl(string $storagePath, ?\DateTimeImmutable $expires)
  * @method string         getPresignedPutUrl(string $storagePath, ?\DateTimeImmutable $expires)
  * @method bool           delete(string $storagePath)
+ * @method string[]       deleteMany(string[] $storagePaths)
  * @method int            getSize(string $storagePath)
  * @method string         getMimeType(string $storagePath)
  * @method string|null    getDomain()

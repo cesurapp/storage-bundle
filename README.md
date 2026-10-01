@@ -46,6 +46,7 @@ storage:
       bucket: "your_bucket_name"
       region: "auto"
       endPoint: "https://your-account-id.r2.cloudflarestorage.com"
+      timeout: 30  # Optional, seconds a request may take (the HTTP client's "timeout" option)
 
     # BackBlaze B2 storage
     backblaze:
@@ -112,9 +113,16 @@ class FileController
 
         // Delete file
         $storage->delete('users/123/photo.jpg');
+
+        // Delete many files (1000 per request on cloud), returns the paths that could not be deleted
+        $failed = $storage->deleteMany(['users/123/a.jpg', 'users/123/b.jpg']);
     }
 }
 ```
+
+`deleteMany()` deletes files only, never a directory or prefix. A missing file counts as deleted, and
+an empty path always fails. If the storage can't be reached it throws, possibly after deleting part of
+the list — calling it again with the same paths is safe.
 
 ### Using Specific Storage Device
 

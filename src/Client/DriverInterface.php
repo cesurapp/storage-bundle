@@ -29,6 +29,18 @@ interface DriverInterface
 
     public function delete(string $storagePath): bool;
 
+    /**
+     * Deletes the given files, never a directory or prefix. A file that doesn't exist counts as deleted,
+     * so calling again with the same paths is safe.
+     *
+     * @param string[] $storagePaths
+     *
+     * @return string[] the paths that could not be deleted, in the order given
+     *
+     * @throws \RuntimeException when the storage can't be reached; paths sent before it may already be deleted
+     */
+    public function deleteMany(array $storagePaths): array;
+
     public function getSize(string $storagePath): int;
 
     public function getMimeType(string $storagePath): string;

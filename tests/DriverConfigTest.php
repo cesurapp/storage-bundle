@@ -7,6 +7,8 @@ use Cesurapp\StorageBundle\Driver\Cloudflare;
 use Cesurapp\StorageBundle\StorageBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 
 /**
  * Driver construction and bundle wiring, checked offline with dummy credentials.
@@ -60,5 +62,34 @@ class DriverConfigTest extends TestCase
         $this->assertSame(Cloudflare::class, $builder->getDefinition('storage.device.r2')->getClass());
         $this->assertSame(BackBlaze::class, $builder->getDefinition('storage.device.b2')->getClass());
         $this->assertFalse($builder->hasDefinition('r2'));
+    }
+
+    public function testDeviceTimeoutReachesTheHttpClient(): void
+    {
+        $timeouts = [];
+        $builder = new ContainerBuilder();
+        $builder->setParameter('kernel.environment', 'prod');
+        $builder->setParameter('kernel.build_dir', sys_get_temp_dir());
+        $builder->set('http_client', new MockHttpClient(static function (string $method, string $url, array $options) use (&$timeouts) {
+            $timeouts[] = $options['timeout'];
+
+            return new MockResponse();
+        }));
+
+        (new StorageBundle())->getContainerExtension()->load([[
+            'default' => 'r2',
+            'devices' => [
+                'r2' => ['driver' => 'cloudflare', 'root' => '/', 'endPoint' => 'https://example.r2.cloudflarestorage.com', 'timeout' => 30],
+                'b2' => ['driver' => 'backblaze', 'root' => '/', 'region' => BackBlaze::US_WEST_004],
+            ],
+        ]], $builder);
+        $builder->getDefinition('storage.device.r2')->setPublic(true);
+        $builder->getDefinition('storage.device.b2')->setPublic(true);
+        $builder->compile();
+
+        $builder->get('storage.device.r2')->write('Hello World', 'text.txt');
+        $builder->get('storage.device.b2')->write('Hello World', 'text.txt');
+
+        $this->assertSame([30.0, (float) ini_get('default_socket_timeout')], $timeouts);
     }
 }
