@@ -46,7 +46,7 @@ storage:
       bucket: "your_bucket_name"
       region: "auto"
       endPoint: "https://your-account-id.r2.cloudflarestorage.com"
-      timeout: 30  # Optional, seconds a request may take (the HTTP client's "timeout" option)
+      timeout: 30  # Optional, seconds a request may go without receiving data (the HTTP client's "timeout" option); under swoole-bundle an upload must be sent within it
 
     # BackBlaze B2 storage
     backblaze:
@@ -131,6 +131,17 @@ the list — calling it again with the same paths is safe.
 $storage->device('local')->upload('/tmp/file.pdf', 'documents/file.pdf');
 $storage->device('backblaze')->upload('/tmp/backup.zip', 'backups/backup.zip');
 ```
+
+### Timeout for a Single Upload (Cloud Only)
+
+```php
+// A copy of the device with its own timeout, sized to the file; the device itself keeps its own
+$storage->device('main')->withTimeout(300)->upload('/tmp/video.mp4', 'videos/video.mp4');
+$storage->withTimeout(300)->upload('/tmp/video.mp4', 'videos/video.mp4'); // default device
+```
+
+Under swoole-bundle the upload must be sent within the timeout (Swoole does not report its progress),
+and `swoole.http_client_max_duration`, when set, limits every request too.
 
 ### Upload with Metadata (Cloud Only)
 

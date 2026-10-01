@@ -48,4 +48,10 @@ interface DriverInterface
     public function getDomain(): ?string;
 
     public function private(): self;
+
+    /**
+     * A copy of the device whose HTTP requests take this timeout, the HTTP client's "timeout" option:
+     * for a large upload, say. Under swoole-bundle an upload must be sent within it.
+     */
+    public function withTimeout(float $seconds): self;
 }

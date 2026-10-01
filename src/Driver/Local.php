@@ -356,4 +356,12 @@ class Local implements DriverInterface
     {
         return $this;
     }
+
+    /**
+     * Files are copied on disk, with no HTTP request to time out.
+     */
+    public function withTimeout(float $seconds): self
+    {
+        return $this;
+    }
 }

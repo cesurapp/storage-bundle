@@ -32,7 +32,7 @@ storage:
       bucket: "bucket_name"
       region: "auto"
       endPoint: "https://endpoint.r2.cloudflarestorage.com"
-      timeout: 30  # Optional, seconds a request may take
+      timeout: 30  # Optional, seconds a request may go without receiving data; under swoole-bundle an upload must be sent within it
 ```
 
 ### Switching Providers
@@ -45,6 +45,9 @@ $storage->upload('source.jpg', 'destination.jpg');
 
 // Use specific provider
 $storage->device('local')->upload('source.jpg', 'destination.jpg');
+
+// A timeout of its own for a large upload; the device keeps its configured one
+$storage->device('main')->withTimeout(300)->upload('video.mp4', 'videos/video.mp4');
 ```
 
 ### Naming Conventions

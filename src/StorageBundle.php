@@ -34,7 +34,7 @@ class StorageBundle extends AbstractBundle
                             ->scalarNode('region')->defaultValue('')->end()
                             ->scalarNode('endPoint')->defaultValue('')->end()
                             ->scalarNode('domain')->defaultValue('')->end()
-                            ->floatNode('timeout')->defaultNull()->info('Seconds an HTTP request to the cloud storage may take, the HTTP client\'s "timeout" option')->end()
+                            ->floatNode('timeout')->defaultNull()->info('Seconds an HTTP request to the cloud storage may go without receiving data, the HTTP client\'s "timeout" option. Under swoole-bundle an upload must be sent within it.')->end()
                         ->end()
                     ->end()
                 ->end()

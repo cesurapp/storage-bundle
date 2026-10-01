@@ -92,4 +92,27 @@ class DriverConfigTest extends TestCase
 
         $this->assertSame([30.0, (float) ini_get('default_socket_timeout')], $timeouts);
     }
+
+    public function testWithTimeoutLeavesTheDeviceAsItIs(): void
+    {
+        $timeouts = [];
+        $httpClient = new MockHttpClient(static function (string $method, string $url, array $options) use (&$timeouts) {
+            $timeouts[] = [$options['timeout'], parse_url($url, PHP_URL_PATH)];
+
+            return new MockResponse();
+        });
+        $driver = new Cloudflare('key', 'secret', 'public', '/', 'https://example.r2.cloudflarestorage.com', 'auto', '', 'private', $httpClient->withOptions(['timeout' => 30]));
+
+        $driver->withTimeout(300)->write('Hello World', 'text.txt');
+        $driver->withTimeout(300)->private()->write('Hello World', 'text.txt');
+        $driver->private()->write('Hello World', 'text.txt');
+        $driver->write('Hello World', 'text.txt');
+
+        $this->assertSame([
+            [300.0, '/public/text.txt'],
+            [300.0, '/private/text.txt'],
+            [30.0, '/private/text.txt'],
+            [30.0, '/public/text.txt'],
+        ], $timeouts);
+    }
 }

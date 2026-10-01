@@ -19,15 +19,21 @@ class Cloudflare extends AbstractDriver
         protected string $bucketPrivate = '',
         ?HttpClientInterface $httpClient = null,
     ) {
-        $this->client = new SimpleS3Client([
-            'accessKeyId' => $accessKey,
-            'accessKeySecret' => $secretKey,
+        $this->httpClient = $httpClient;
+        $this->client = $this->createClient($httpClient);
+
+        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain, $this->bucketPrivate);
+    }
+
+    protected function createClient(?HttpClientInterface $httpClient): SimpleS3Client
+    {
+        return new SimpleS3Client([
+            'accessKeyId' => $this->accessKey,
+            'accessKeySecret' => $this->secretKey,
             'region' => $this->region,
             'endpoint' => $this->endPoint,
             'pathStyleEndpoint' => 'true',
         ], null, $httpClient);
-
-        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain, $this->bucketPrivate);
     }
 
     public function getUrl(string $storagePath): string

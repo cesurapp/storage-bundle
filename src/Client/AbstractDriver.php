@@ -2,9 +2,13 @@
 
 namespace Cesurapp\StorageBundle\Client;
 
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 abstract class AbstractDriver implements DriverInterface
 {
     protected SimpleS3Client $client;
+    protected ?HttpClientInterface $httpClient = null;
     protected bool $isPrivate = false;
     protected ?self $privateView = null;
 
@@ -41,6 +45,18 @@ abstract class AbstractDriver implements DriverInterface
 
         return $this->privateView = $clone;
     }
+
+    public function withTimeout(float $seconds): static
+    {
+        $clone = clone $this;
+        $clone->httpClient = ($this->httpClient ?? HttpClient::create())->withOptions(['timeout' => $seconds]);
+        $clone->client = $clone->createClient($clone->httpClient);
+        $clone->privateView = null;
+
+        return $clone;
+    }
+
+    abstract protected function createClient(?HttpClientInterface $httpClient): SimpleS3Client;
 
     protected function getRoot(): string
     {

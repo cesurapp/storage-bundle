@@ -35,14 +35,20 @@ class BackBlaze extends AbstractDriver
             throw new \InvalidArgumentException('BackBlaze requires a region, e.g. BackBlaze::US_WEST_004.');
         }
 
-        $this->client = new SimpleS3Client([
+        $this->httpClient = $httpClient;
+        $this->client = $this->createClient($httpClient);
+
+        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain, $this->bucketPrivate);
+    }
+
+    protected function createClient(?HttpClientInterface $httpClient): SimpleS3Client
+    {
+        return new SimpleS3Client([
             'accessKeyId' => $this->accessKey,
             'accessKeySecret' => $this->secretKey,
             'region' => $this->region,
             'endpoint' => $this->endPoint ?: "https://s3.$this->region.backblazeb2.com",
             'pathStyleEndpoint' => 'true',
         ], null, $httpClient);
-
-        parent::__construct($this->accessKey, $this->secretKey, $this->bucket, $this->root, $this->endPoint, $this->region, $this->domain, $this->bucketPrivate);
     }
 }

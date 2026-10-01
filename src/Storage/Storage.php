@@ -6,21 +6,22 @@ use Cesurapp\StorageBundle\Client\DriverInterface;
 use Cesurapp\StorageBundle\Client\SimpleS3Client;
 
 /**
- * @method SimpleS3Client getClient()
- * @method bool           upload(string $sourcePath, string $storagePath, array $metadata = [])
- * @method bool           write(string $content, string $storagePath, string $contentType = 'text/plain', array $metadata = [])
- * @method bool           exists(string $storagePath)
- * @method string         download(string $storagePath)
- * @method resource       downloadResource(string $storagePath)
- * @method iterable       downloadChunk(string $storagePath)
- * @method string         getUrl(string $storagePath)
- * @method string         getPresignedUrl(string $storagePath, ?\DateTimeImmutable $expires)
- * @method string         getPresignedPutUrl(string $storagePath, ?\DateTimeImmutable $expires)
- * @method bool           delete(string $storagePath)
- * @method string[]       deleteMany(string[] $storagePaths)
- * @method int            getSize(string $storagePath)
- * @method string         getMimeType(string $storagePath)
- * @method string|null    getDomain()
+ * @method SimpleS3Client  getClient()
+ * @method bool            upload(string $sourcePath, string $storagePath, array $metadata = [])
+ * @method bool            write(string $content, string $storagePath, string $contentType = 'text/plain', array $metadata = [])
+ * @method bool            exists(string $storagePath)
+ * @method string          download(string $storagePath)
+ * @method resource        downloadResource(string $storagePath)
+ * @method iterable        downloadChunk(string $storagePath)
+ * @method string          getUrl(string $storagePath)
+ * @method string          getPresignedUrl(string $storagePath, ?\DateTimeImmutable $expires)
+ * @method string          getPresignedPutUrl(string $storagePath, ?\DateTimeImmutable $expires)
+ * @method bool            delete(string $storagePath)
+ * @method string[]        deleteMany(string[] $storagePaths)
+ * @method int             getSize(string $storagePath)
+ * @method string          getMimeType(string $storagePath)
+ * @method string|null     getDomain()
+ * @method DriverInterface withTimeout(float $seconds)
  */
 readonly class Storage
 {
