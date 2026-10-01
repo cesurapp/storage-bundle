@@ -64,7 +64,8 @@ class Local implements DriverInterface
             throw new \RuntimeException('Can\'t create directory '.\dirname($path));
         }
 
-        return (bool) \file_put_contents($path, $content);
+        // Bytes written, false on failure: an empty file writes 0 and is written all the same
+        return false !== \file_put_contents($path, $content);
     }
 
     /**

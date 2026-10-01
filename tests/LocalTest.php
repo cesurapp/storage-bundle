@@ -24,6 +24,11 @@ class LocalTest extends WebTestCase
         $this->assertTrue(is_readable($this->object->getUrl('text.txt')));
 
         $this->object->delete('text.txt');
+
+        // An empty file is written too, though no byte is
+        $this->assertTrue($this->object->write('', 'empty.txt'));
+        $this->assertSame('', $this->object->download('empty.txt'));
+        $this->object->delete('empty.txt');
     }
 
     public function testDownload(): void
